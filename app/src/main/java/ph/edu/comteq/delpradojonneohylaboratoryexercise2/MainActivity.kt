@@ -7,7 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
@@ -40,84 +39,109 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ProfileScreen(){
-    // Root layout: Column stacks everything vertically, centered
+    // Root layout: Column stacks everything vertically
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFF0F0F0)) // light gray background
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
     ){
-        //Avatar
+        // Cover photo
         Image(
-            painter = painterResource(id = R.drawable.avatar),
-            contentDescription = "Profile picture",
+            painter = painterResource(id = R.drawable.cover),
+            contentDescription = "Cover photo",
             modifier = Modifier
-                .size(100.dp)
-                .border(2.dp, Color.Black, CircleShape) // black circular border
-                .clip(CircleShape),
-            contentScale = ContentScale.Crop
+                .fillMaxWidth()
+                .height(150.dp),
+            contentScale = ContentScale.Crop // fills the width without stretching/distorting
         )
-        Spacer(modifier = Modifier.height(16.dp))
 
-        //Name and bio
-        Text(
-            text = "Jon Neoh Y. Del Prado",
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            text = "BSIT Student : Mobile Developer",
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.Gray
-        )
-        Spacer(modifier = Modifier.height(20.dp))
+        // Avatar + Name/Bio row, sits right below the cover
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, top = 12.dp),
+            verticalAlignment = Alignment.CenterVertically // keeps avatar and name/bio level with each other
+        ) {
+            // Avatar
+            Image(
+                painter = painterResource(id = R.drawable.avatar),
+                contentDescription = "Profile picture",
+                modifier = Modifier
+                    .size(90.dp)
+                    .border(3.dp, Color.White, CircleShape) // white circular border
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
+            )
 
-        //Contact info
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.Default.Email,
-                contentDescription = "Email",
-                tint = Color.Gray)
-            Spacer(modifier = Modifier.width(8.dp))
-            Text("delpradojonneoh1605@gmail.com")
-        }
-        Spacer(modifier = Modifier.height(6.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.Default.Phone,
-                contentDescription = "Phone",
-                tint = Color.Gray)
-            Spacer(modifier = Modifier.width(8.dp))
-            Text("+63 998 9022 469")
-        }
-        Spacer(modifier = Modifier.height(20.dp))
-
-        //Buttons
-        var isFollowing by remember {mutableStateOf(false)}
-        //isFollowing state changes if followed or not when clicked
-
-        // Follow button color changes based on isFollowing state
-        val followButtonColor = if (isFollowing) Color.Gray else Color(0xFF4A6FA5) // muted blue
-
-        Row{
-            Button(
-                onClick = { },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF4CAF50), // muted green
-                    contentColor = Color.White
-                )
-            ) {
-                Text("Message")
-            }
             Spacer(modifier = Modifier.width(12.dp))
-            Button(
-                onClick = {isFollowing = !isFollowing},
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = followButtonColor,
-                    contentColor = Color.White
+
+            // Name and bio stacked beside the avatar
+            Column {
+                Text(
+                    text = "Jon Neoh Y. Del Prado",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
                 )
-            ){
-                Text(if (isFollowing) "Following" else "Follow")
+                Text(
+                    text = "BSIT Student : Mobile Developer",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Gray
+                )
+            }
+        }
+
+        // Small gap before contact info
+        Spacer(modifier = Modifier.height(12.dp))
+
+        //Profile details section, left-aligned
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        ){
+            // Contact info, email and phone side by side in one row
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Default.Email, contentDescription = "Email", tint = Color.Gray)
+                Spacer(modifier = Modifier.width(6.dp))
+                Text("delpradojonneoh1605@gmail.com", style = MaterialTheme.typography.bodySmall)
+
+                Spacer(modifier = Modifier.width(16.dp)) // gap between email and phone group
+
+                Icon(Icons.Default.Phone, contentDescription = "Phone", tint = Color.Gray)
+                Spacer(modifier = Modifier.width(6.dp))
+                Text("+63 998 9022 469", style = MaterialTheme.typography.bodySmall)
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            //Buttons
+            var isFollowing by remember {mutableStateOf(false)}
+            //isFollowing state changes if followed or not when clicked
+
+            // Follow button color changes based on isFollowing state
+            val followButtonColor = if (isFollowing) Color.Gray else Color(0xFF4A6FA5) // muted blue
+
+            // Buttons left-aligned, Row doesn't fill max width and parent Column is left-aligned by default
+            Row {
+                Button(
+                    onClick = {isFollowing = !isFollowing},
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = followButtonColor,
+                        contentColor = Color.White
+                    )
+                ){
+                    Text(if (isFollowing) "Following" else "Follow")
+                }
+                Spacer(modifier = Modifier.width(12.dp))
+                Button(
+                    onClick = { },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF4CAF50), // muted green
+                        contentColor = Color.White
+                    )
+                ) {
+                    Text("Message")
+                }
             }
         }
     }
