@@ -59,7 +59,7 @@ fun ProfileScreen(){
 
         //Name and bio
         Text(
-            text = "JOn Neoh Y. Del Prado",
+            text = "Jon Neoh Y. Del Prado",
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold
         )
@@ -104,5 +104,14 @@ fun ProfileScreen(){
                 Text(if (isFollowing) "Following" else "Follow")
             }
         }
+    }
+}
+
+//Preview function
+@Preview(showBackground = true)
+@Composable
+fun ProfileScreenPreview(){
+    DelPradoJonNeohYLaboratoryExercise2Theme {
+        ProfileScreen()
     }
 }
