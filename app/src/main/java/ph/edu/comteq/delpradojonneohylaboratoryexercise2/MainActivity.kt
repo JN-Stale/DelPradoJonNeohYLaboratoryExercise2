@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.border
+import androidx.compose.runtime.saveable.rememberSaveable
 import ph.edu.comteq.delpradojonneohylaboratoryexercise2.ui.theme.DelPradoJonNeohYLaboratoryExercise2Theme
 
 class MainActivity : ComponentActivity() {
@@ -39,6 +40,11 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ProfileScreen(){
+    //rememberSaveable survives screen rotation, remember does not
+    var isFollowing by rememberSaveable {mutableStateOf(false)}
+    // view count don't need to be saved, remember is fine
+    var viewCount by remember { mutableIntStateOf(0)}
+
     // Root layout: Column stacks everything vertically
     Column(
         modifier = Modifier
@@ -115,23 +121,15 @@ fun ProfileScreen(){
             Spacer(modifier = Modifier.height(20.dp))
 
             //Buttons
-            var isFollowing by remember {mutableStateOf(false)}
-            //isFollowing state changes if followed or not when clicked
-
             // Follow button color changes based on isFollowing state
-            val followButtonColor = if (isFollowing) Color.Gray else Color(0xFF4A6FA5) // muted blue
 
             // Buttons left-aligned, Row doesn't fill max width and parent Column is left-aligned by default
             Row {
-                Button(
-                    onClick = {isFollowing = !isFollowing},
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = followButtonColor,
-                        contentColor = Color.White
-                    )
-                ){
-                    Text(if (isFollowing) "Following" else "Follow")
-                }
+                // Follow button state hoisted to ProfileScreen, this just reads/toggles it
+                FollowButton(
+                    isFollowing = isFollowing,
+                    onToggle = { isFollowing = !isFollowing }
+                )
                 Spacer(modifier = Modifier.width(12.dp))
                 Button(
                     onClick = { },
@@ -143,6 +141,67 @@ fun ProfileScreen(){
                     Text("Message")
                 }
             }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            //Counter
+            ProfileViewCounter(
+                viewCount = viewCount,
+                onIncrement = { viewCount++ }
+            )
+        }
+    }
+}
+@Composable
+fun FollowButton(
+    isFollowing: Boolean,
+    onToggle: () -> Unit,
+    modifier: Modifier = Modifier
+){
+    if(isFollowing){
+        //Outlined Style when followed
+        OutlinedButton(
+            onClick = onToggle,
+            modifier = modifier,
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = Color.Black
+            )
+        ){
+            Text("Following")
+        }
+    } else {
+        //Normal styling
+        Button(
+            onClick = onToggle,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF4A6FA5),
+                contentColor = Color.White
+            ),
+            modifier = modifier
+        ){
+            Text("Follow")
+        }
+    }
+}
+
+@Composable
+fun ProfileViewCounter(
+    viewCount: Int,
+    onIncrement: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        Text(
+            text = "Profile views: $viewCount",
+            style = MaterialTheme.typography.bodyMedium,
+            color = Color.Black
+        )
+        Spacer(modifier = Modifier.width(12.dp))
+        Button(onClick = onIncrement) {
+            Text("+1")
         }
     }
 }
