@@ -87,5 +87,22 @@ fun ProfileScreen(){
             Text("+63 998 9022 469")
         }
         Spacer(modifier = Modifier.height(20.dp))
+
+        //Buttons
+        var isFollowing by remember {mutableStateOf(false)}
+        //isFollowing state changes if followed or not
+
+        Row{
+            Button(
+                onClick = { },
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+            ) {
+                Text("Message")
+            }
+            Spacer(modifier = Modifier.width(12.dp))
+            OutlinedButton(onClick = {isFollowing = !isFollowing}){
+                Text(if (isFollowing) "Following" else "Follow")
+            }
+        }
     }
 }
