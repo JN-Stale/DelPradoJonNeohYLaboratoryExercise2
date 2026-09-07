@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.CircleShape
@@ -22,6 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.border
 import ph.edu.comteq.delpradojonneohylaboratoryexercise2.ui.theme.DelPradoJonNeohYLaboratoryExercise2Theme
 
 class MainActivity : ComponentActivity() {
@@ -42,6 +44,7 @@ fun ProfileScreen(){
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color(0xFFF0F0F0)) // light gray background
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -52,6 +55,7 @@ fun ProfileScreen(){
             contentDescription = "Profile picture",
             modifier = Modifier
                 .size(100.dp)
+                .border(2.dp, Color.Black, CircleShape) // black circular border
                 .clip(CircleShape),
             contentScale = ContentScale.Crop
         )
@@ -90,17 +94,29 @@ fun ProfileScreen(){
 
         //Buttons
         var isFollowing by remember {mutableStateOf(false)}
-        //isFollowing state changes if followed or not
+        //isFollowing state changes if followed or not when clicked
+
+        // Follow button color changes based on isFollowing state
+        val followButtonColor = if (isFollowing) Color.Gray else Color(0xFF4A6FA5) // muted blue
 
         Row{
             Button(
                 onClick = { },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF4CAF50), // muted green
+                    contentColor = Color.White
+                )
             ) {
                 Text("Message")
             }
             Spacer(modifier = Modifier.width(12.dp))
-            OutlinedButton(onClick = {isFollowing = !isFollowing}){
+            Button(
+                onClick = {isFollowing = !isFollowing},
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = followButtonColor,
+                    contentColor = Color.White
+                )
+            ){
                 Text(if (isFollowing) "Following" else "Follow")
             }
         }
